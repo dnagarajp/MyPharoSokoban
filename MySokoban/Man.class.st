@@ -1,31 +1,28 @@
 Class {
-	#name : #Sokoban,
+	#name : #Man,
 	#superclass : #Object,
 	#instVars : [
-		'man',
-		'map'
+		'x',
+		'y'
 	],
 	#category : #MySokoban
 }
 
 { #category : #initialization }
-Sokoban >> initialize [ 
+Man >> initialize [ 
 
-man := Man new.
-map := Map new.
+x := 0.
+y := 0.
 
 
 ]
 
 { #category : #getters }
-Sokoban >> man [
-
-^ man.
+Man >> x [
+	^ x
 ]
 
 { #category : #getters }
-Sokoban >> map [
-
-^ map.
-
+Man >> y [
+	^ y
 ]
