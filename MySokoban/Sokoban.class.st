@@ -2,19 +2,25 @@ Class {
 	#name : #Sokoban,
 	#superclass : #Object,
 	#instVars : [
-		'box'
+		'x',
+		'y'
 	],
 	#category : #MySokoban
 }
 
-{ #category : #accessing }
-Sokoban >> box [
+{ #category : #initialization }
+Sokoban >> initialize [ 
 
-^box
+x := 0.
+y := 0.
 ]
 
-{ #category : #accessing }
-Sokoban >> box: anInteger [
+{ #category : #getters }
+Sokoban >> x [
+	^ x
+]
 
-box := anInteger 
+{ #category : #getters }
+Sokoban >> y [
+	^ y
 ]
