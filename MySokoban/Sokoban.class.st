@@ -3,7 +3,9 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'x',
-		'y'
+		'y',
+		'mapWidth',
+		'mapHeight'
 	],
 	#category : #MySokoban
 }
@@ -13,6 +15,18 @@ Sokoban >> initialize [
 
 x := 0.
 y := 0.
+mapWidth := 8.
+mapHeight := 10.
+]
+
+{ #category : #getteres }
+Sokoban >> maxHeight [
+	^ mapHeight .
+]
+
+{ #category : #getteres }
+Sokoban >> maxWidth [
+	^ mapWidth .
 ]
 
 { #category : #getters }
