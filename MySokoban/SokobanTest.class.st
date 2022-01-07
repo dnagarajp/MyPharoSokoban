@@ -14,6 +14,16 @@ man := Sokoban new.
 ]
 
 { #category : #initialization }
+SokobanTest >> testGetPosition [
+]
+
+{ #category : #initialization }
+SokobanTest >> testMapIsInitailized [
+
+self assert: (man map at:4 at:3 )  equals: $@
+]
+
+{ #category : #initialization }
 SokobanTest >> testXYIntializeValue [
 
 self assert: man x equals: 0.
