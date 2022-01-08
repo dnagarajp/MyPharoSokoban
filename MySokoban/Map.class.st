@@ -4,19 +4,56 @@ Class {
 	#instVars : [
 		'mapWidth',
 		'mapHeight',
-		'mapArray'
+		'mapArray',
+		'desSquaresArray'
 	],
 	#category : #MySokoban
 }
 
+{ #category : #getters }
+Map >> calculateDesSquares [
+
+	| cell |
+	0 to: mapHeight-1 do: [ :row | 
+		0 to: mapWidth-1 do: [ :col | 
+			cell := row * mapWidth + col+ 1.
+			((mapArray at: cell) == $x or: (mapArray at: cell) == $O) ifTrue: [ 
+				desSquaresArray add: cell ] ] ]
+]
+
+{ #category : #getters }
+Map >> desSquaresArray [
+
+	^ desSquaresArray
+]
+
+{ #category : #getters }
+Map >> desSquaresCount [
+
+	^ desSquaresArray size.
+]
+
+{ #category : #getters }
+Map >> getPosition [
+
+	| count cell |
+	count := 0.
+	0 to: mapHeight-1 do: [ :row | 
+		0 to: mapHeight-1 do: [ :col | 
+			cell := row * mapWidth + col.
+			((mapArray at: cell) == 'x' or: (mapArray at: cell) == 'O') 
+				ifTrue: [ desSquaresArray at: count + 1 put: cell ] ] ].
+	^ count
+]
+
 { #category : #initialization }
-Map >> initialize [ 
+Map >> initialize [
 
-mapWidth := 8.
-mapHeight := 10.
-
-self mapInitialize. 
-
+	mapWidth := 8.
+	mapHeight := 10.
+	desSquaresArray := OrderedCollection new.
+	self mapInitialize.
+	self calculateDesSquares
 ]
 
 { #category : #getters }
@@ -29,18 +66,16 @@ Map >> mapArray [
 { #category : #getters }
 Map >> mapInitialize [
 
-mapArray := Array2D rows: mapHeight columns: mapWidth.
-self mapStoreLine: '#####   ' atRow: 1.
-self mapStoreLine: '#xB ### ' atRow: 2.
-self mapStoreLine: '###   # ' atRow: 3.
-self mapStoreLine: '#x@B  # ' atRow: 4.
-self mapStoreLine: '### Bx# ' atRow: 5.
-self mapStoreLine: '#x##B # ' atRow: 6.
-self mapStoreLine: '# # x ##' atRow: 7.
-self mapStoreLine: '#B OBBx#' atRow: 8.
-self mapStoreLine: '#   x  #' atRow: 9.
-self mapStoreLine: '########' atRow: 10.
-
+	mapArray  :=   '#####   ',
+    '#xB ### ',
+    '###   # ',
+    '#x@B  # ',
+    '### Bx# ',
+    '#x##B # ',
+    '# # x ##',
+    '#B OBBx#',
+    '#   x  #',
+    '########'.
 ]
 
 { #category : #getters }
