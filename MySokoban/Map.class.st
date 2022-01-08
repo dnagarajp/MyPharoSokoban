@@ -5,7 +5,9 @@ Class {
 		'mapWidth',
 		'mapHeight',
 		'mapArray',
-		'desSquaresArray'
+		'desSquaresArray',
+		'x',
+		'y'
 	],
 	#category : #MySokoban
 }
@@ -34,16 +36,17 @@ Map >> desSquaresCount [
 ]
 
 { #category : #getters }
-Map >> getPosition [
+Map >> getPositionXY [
+| cell man|
+man := Man new.
 
-	| count cell |
-	count := 0.
-	0 to: mapHeight-1 do: [ :row | 
-		0 to: mapHeight-1 do: [ :col | 
-			cell := row * mapWidth + col.
-			((mapArray at: cell) == 'x' or: (mapArray at: cell) == 'O') 
-				ifTrue: [ desSquaresArray at: count + 1 put: cell ] ] ].
-	^ count
+	0 to: mapHeight - 1 do: [ :row | 
+		0 to: mapWidth - 1 do: [ :col | 
+			cell := row * mapWidth + col + 1.
+			((mapArray at: cell) == $@) ifTrue: [ 
+				 x := col. y :=row]]].
+	
+	Transcript show: man;cr.
 ]
 
 { #category : #initialization }
@@ -51,9 +54,12 @@ Map >> initialize [
 
 	mapWidth := 8.
 	mapHeight := 10.
+	x := 0.
+	y := 0.
 	desSquaresArray := OrderedCollection new.
 	self mapInitialize.
-	self calculateDesSquares
+	self calculateDesSquares.
+	self getPositionXY 
 ]
 
 { #category : #getters }
@@ -92,4 +98,33 @@ Map >> maxHeight [
 { #category : #getteres }
 Map >> maxWidth [
 	^ mapWidth .
+]
+
+{ #category : #getters }
+Map >> moveUp [
+
+]
+
+{ #category : #getters }
+Map >> x [
+
+^x.
+]
+
+{ #category : #getters }
+Map >> x: anInteger [
+
+ x:= anInteger 
+]
+
+{ #category : #getters }
+Map >> y [
+
+^y.
+]
+
+{ #category : #getters }
+Map >> y: anInteger [
+
+ y:= anInteger 
 ]
