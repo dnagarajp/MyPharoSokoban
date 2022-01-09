@@ -13,7 +13,7 @@ Class {
 	#category : #MySokoban
 }
 
-{ #category : #getters }
+{ #category : #mainMethods }
 Sokoban >> calculateDesSquares [
 
 	| cell |
@@ -22,29 +22,30 @@ Sokoban >> calculateDesSquares [
 		0 to: mapWidth-1 do: [ :col | 
 			cell := row * mapWidth + col+ 1.
 			((mapArray at: cell) == $x or: (mapArray at: cell) == $O) ifTrue: [ 
-				desSquaresArray add: cell ] ] ]
+				desSquaresArray add: cell ] ] ].
+	
 ]
 
-{ #category : #getters }
+{ #category : #'getteres and setters' }
 Sokoban >> desSquaresArray [
 
 	^ desSquaresArray
 ]
 
-{ #category : #getters }
+{ #category : #mainMethods }
 Sokoban >> desSquaresCount [
 
 	^ desSquaresArray size.
 ]
 
-{ #category : #getters }
+{ #category : #mainMethods }
 Sokoban >> displayMap [
 
 	0 to: (mapArray length)  do: [ :each | mapArray cr ].
 
 ]
 
-{ #category : #getters }
+{ #category : #'getteres and setters' }
 Sokoban >> enterKey: akey [
 
 " switch(key)
@@ -74,19 +75,16 @@ Sokoban >> enterKey: akey [
 
 ]
 
-{ #category : #getters }
-Sokoban >> getPositionXY [
+{ #category : #mainMethods }
+Sokoban >> getPositionManXY [
 | cell|
 
 	0 to: mapHeight - 1 do: [ :row | 
 		0 to: mapWidth - 1 do: [ :col | 
-			cell := row * mapWidth + col + 1.
+			cell := row * mapWidth + col+1.
 			((mapArray at: cell) == $@) ifTrue: [ 
-				 x := col. y :=row]]].
-	
-	Transcript show: cell ;cr.
-	Transcript show:x.
-	Transcript show:y.
+				 x := row+1. y :=col+1]]].
+
 ]
 
 { #category : #initialization }
@@ -99,12 +97,12 @@ Sokoban >> initialize [
 	desSquaresArray := OrderedCollection new.
 	self mapInitialize.
 	self calculateDesSquares.
-	self getPositionXY.
-	self playerPosition. 
+	self getPositionManXY.
 	self mapArraySize.
+	self playerPosition.
 ]
 
-{ #category : #getters }
+{ #category : #mainMethods }
 Sokoban >> mainToCallFucntion [
 
 "    if(key == 0) break;    
@@ -154,20 +152,20 @@ Sokoban >> mainToCallFucntion [
 
 ]
 
-{ #category : #getters }
+{ #category : #'getteres and setters' }
 Sokoban >> mapArray [
 
 ^ mapArray.
 
 ]
 
-{ #category : #getters }
+{ #category : #'getteres and setters' }
 Sokoban >> mapArraySize [
 
 ^ mapArray size.
 ]
 
-{ #category : #getters }
+{ #category : #'getteres and setters' }
 Sokoban >> mapInitialize [
 
 	mapArray  := '#####   ',
@@ -182,23 +180,23 @@ Sokoban >> mapInitialize [
     '########'.
 ]
 
-{ #category : #getters }
+{ #category : #mainMethods }
 Sokoban >> mapStoreLine: asString atRow: anInteger [
 
 (1 to: mapWidth ) do: [ :each | mapArray at: anInteger at:each put: (asString at: each)].  
 ]
 
-{ #category : #getteres }
+{ #category : #'getteres and setters' }
 Sokoban >> maxHeight [
 	^ mapHeight .
 ]
 
-{ #category : #getteres }
+{ #category : #'getteres and setters' }
 Sokoban >> maxWidth [
 	^ mapWidth .
 ]
 
-{ #category : #getters }
+{ #category : #mainMethods }
 Sokoban >> moveCharacterX: xPos y: yPos offset: offsetNumber [
 "if(map[PLAYER_POSITION + offset] != '#')                            // if player doesn't hit the wall
     {
@@ -243,54 +241,43 @@ Sokoban >> moveCharacterX: xPos y: yPos offset: offsetNumber [
 	
 ]
 
-{ #category : #getters }
-Sokoban >> moveUp [
-
-]
-
-{ #category : #getters }
+{ #category : #'getteres and setters' }
 Sokoban >> playerPosition [
 
-Transcript show: playerPosition.
-^ playerPosition.
+| playerPosition1 |
+playerPosition1 := y * mapWidth +x -1.
+
+^ playerPosition1.
 
 
 ]
 
-{ #category : #getters }
-Sokoban >> playerPosition: anInteger [
-
-playerPosition := anInteger .
-
-
-]
-
-{ #category : #getters }
+{ #category : #initialization }
 Sokoban >> printOn: aStream [
 
 super printOn: aStream.
 aStream nextPutAll: ' with value: ', mapArray printString.
 ]
 
-{ #category : #getters }
+{ #category : #'getteres and setters' }
 Sokoban >> x [
 
 ^x.
 ]
 
-{ #category : #getters }
+{ #category : #'getteres and setters' }
 Sokoban >> x: anInteger [
 
  x:= anInteger 
 ]
 
-{ #category : #getters }
+{ #category : #'getteres and setters' }
 Sokoban >> y [
 
 ^y.
 ]
 
-{ #category : #getters }
+{ #category : #'getteres and setters' }
 Sokoban >> y: anInteger [
 
  y:= anInteger 
