@@ -99,7 +99,7 @@ Sokoban >> initialize [
 	self calculateDesSquares.
 	self getPositionManXY.
 	self mapArraySize.
-	self playerPosition.
+	
 ]
 
 { #category : #mainMethods }
@@ -165,10 +165,10 @@ Sokoban >> mapArraySize [
 ^ mapArray size.
 ]
 
-{ #category : #'getteres and setters' }
+{ #category : #getters }
 Sokoban >> mapInitialize [
 
-	mapArray  := '#####   ',
+	mapArray  :=   '#####   ',
     '#xB ### ',
     '###   # ',
     '#x@B  # ',
@@ -198,65 +198,59 @@ Sokoban >> maxWidth [
 
 { #category : #mainMethods }
 Sokoban >> moveCharacterX: xPos y: yPos offset: offsetNumber [
-"if(map[PLAYER_POSITION + offset] != '#')                            // if player doesn't hit the wall
-    {
-        if(((map[PLAYER_POSITION + offset] == 'B') ||                   // if player hits the box
-            (map[PLAYER_POSITION + offset] == 'O')) &&                  // or the box on 'x' cell
-            (map[PLAYER_POSITION + offset * 2] != '#' ||                // and box doesn't hit a wall
-             map[PLAYER_POSITION + offset * 2] != 'B' ||                // or another box
-             map[PLAYER_POSITION + offset * 2] != 'O'))                 // or box on 'x' cell
-        {
-            map[PLAYER_POSITION] = ' ';                                 // clear previous player's position
-            man.x = man.x + offset;                                            // update player's coordinate
 
-            if(map[PLAYER_POSITION + offset] == ' ')                    // if the player position next to the box is empty
-                map[PLAYER_POSITION + offset] = 'B';                    // push the box
-
-            else if(map[PLAYER_POSITION + offset] == 'x')               // if the player position next to the box is 'x'  
-                map[PLAYER_POSITION + offset] = 'O';                    // mark the box is on it's place
-
-            else
-            {
-                map[PLAYER_POSITION - offset] = '@';                    // if box hits the wall or another box
-                return;                                                 // don't push it any further
-            }
-
-            map[PLAYER_POSITION] = '@';                                 // draw the player in the new position
-        }
-
-        else                                                            // if the player position next to the player is empty                                                        
-        {
-            map[PLAYER_POSITION] = ' ';                                 // clear previous player position
-            man.x = man.x + offset;                                            // update player's coordinate
-            map[PLAYER_POSITION] = '@';                                 // draw the player in the new position
-        }
-    }  "
-	(mapArray at: playerPosition + offsetNumber) ~= $# ifTrue: [ 
-		(mapArray at: playerPosition + offsetNumber == $B) or:
-		(mapArray at: playerPosition + offsetNumber == $O) and:
-		(mapArray at: playerPosition + (offsetNumber * 2)  ~= $#) or:
-	   (mapArray at: playerPosition + (offsetNumber * 2)  ~= $B) or:
-		(mapArray at: playerPosition + (offsetNumber * 2)  ~= $O)].
-		
-	
+	| newPosition |
+	(mapArray at: playerPosition + offsetNumber) ~= $# ifTrue: [ "1st if"
+		(mapArray at: playerPosition + offsetNumber == $B)
+		| (mapArray at: playerPosition + offsetNumber == $O)
+		& (mapArray at: playerPosition + (offsetNumber * 2) ~= $#)
+		| (mapArray at: playerPosition + (offsetNumber * 2) ~= $B)
+		| (mapArray at: playerPosition + (offsetNumber * 2) ~= $O)
+			ifTrue: [ "2nd if"
+				mapArray playerPosition: Character space.
+				x := x + offsetNumber.
+				(mapArray at: playerPosition + offsetNumber) == Character space 
+					ifTrue: [ "3rd if Open"
+						newPosition := playerPosition + offsetNumber.
+						mapArray newPosition: $B ]. "3rd if close"
+				(mapArray at: playerPosition + offsetNumber == $x)
+					ifTrue: [ 
+						newPosition := playerPosition + offsetNumber.
+						mapArray newPosition: $O ]
+					ifFalse: [ 
+						newPosition := playerPosition - offsetNumber.
+						self mapArray newPosition: $@ ]. 
+					mapArray playerPosition: $@]
+			ifFalse: [ 
+				mapArray playerPosition: Character space.
+				x := x + offsetNumber.
+				mapArray playerPosition: $@ ] ]
 ]
 
 { #category : #'getteres and setters' }
 Sokoban >> playerPosition [
 
 | playerPosition1 |
-playerPosition1 := y * mapWidth +x -1.
+
+playerPosition1 := (((y * mapWidth) +x) -1).
 
 ^ playerPosition1.
 
 
 ]
 
+{ #category : #'getteres and setters' }
+Sokoban >> playerPosition: anInteger [
+
+	playerPosition := anInteger.
+]
+
 { #category : #initialization }
 Sokoban >> printOn: aStream [
 
 super printOn: aStream.
-aStream nextPutAll: ' with value: ', mapArray printString.
+aStream nextPutAll: ' with value: '.
+mapArray do: [:i | aStream << i printString ].
 ]
 
 { #category : #'getteres and setters' }
