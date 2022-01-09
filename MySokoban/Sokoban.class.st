@@ -13,6 +13,30 @@ Class {
 	#category : #MySokoban
 }
 
+{ #category : #'as yet unclassified' }
+Sokoban class >> emergencyStop [
+
+ ^ true .
+	
+
+]
+
+{ #category : #'as yet unclassified' }
+Sokoban class >> playGame [
+
+	| soko |
+	soko := Sokoban new.
+
+	[self emergencyStop] whileFalse: [ 
+		| enteredText |
+		soko mapArray.
+		enteredText := UIManager default request: 'Please enter wsad'.
+		soko mainToCallFucntion: enteredText.
+		Transcript show: soko mapArray ; cr.]
+	
+
+]
+
 { #category : #mainMethods }
 Sokoban >> calculateDesSquares [
 
@@ -45,45 +69,15 @@ Sokoban >> displayMap [
 
 ]
 
-{ #category : #'getteres and setters' }
-Sokoban >> enterKey: akey [
-
-" switch(key)
-        {
-            case 'w':
-            obj.PLAYER_POSITION();
-            obj.MoveCharacter(man.x, man.y, - MAP_WIDTH);
-            obj.display();
-            break;
-           
-            case 's':
-            PLAYER_POSITION();
-            MoveCharacter(man.x, man.y, MAP_WIDTH);
-            display();
-            break;
-           
-            case 'a':
-            PLAYER_POSITION()
-            MoveCharacter(man.x, man.y, - 1); break;
-           
-            case 'd':
-            PLAYER_POSITION();
-            MoveCharacter(man.x, man.y, 1); break;
-        }
-"
-
-
-]
-
 { #category : #mainMethods }
 Sokoban >> getPositionManXY [
 | cell|
 
-	0 to: mapHeight - 1 do: [ :row | 
-		0 to: mapWidth - 1 do: [ :col | 
-			cell := row * mapWidth + col+1.
+	1 to: mapHeight  do: [ :row | 
+		1 to: mapWidth do: [ :col | 
+			cell := ((row -1) * mapWidth) + col.
 			((mapArray at: cell) == $@) ifTrue: [ 
-				 x := row+1. y :=col+1]]].
+				 x := col. y :=row]]].
 
 ]
 
@@ -99,56 +93,33 @@ Sokoban >> initialize [
 	self calculateDesSquares.
 	self getPositionManXY.
 	self mapArraySize.
+	self playerPosition.
+	
 	
 ]
 
 { #category : #mainMethods }
-Sokoban >> mainToCallFucntion [
+Sokoban >> mainToCallFucntion: key [
 
-"    if(key == 0) break;    
-        key = getch(); //input from user
-        GetPosition();
-        switch(key)
-        {
-            case 'w':
-            obj.PLAYER_POSITION();
-            obj.MoveCharacter(man.x, man.y, - MAP_WIDTH);
-            obj.display();
-            break;
-           
-            case 's':
-            PLAYER_POSITION();
-            MoveCharacter(man.x, man.y, MAP_WIDTH);
-            display();
-            break;
-           
-            case 'a':
-            PLAYER_POSITION()
-            MoveCharacter(man.x, man.y, - 1); break;
-           
-            case 'd':
-            PLAYER_POSITION();
-            MoveCharacter(man.x, man.y, 1); break;
-        }
+|soko|
 
-        dest_count = 0;                                                 // reset 'x' cells counter
+soko:= self class new.
 
-        for(int i = 0; i < 10; i++)                                     // for all destination player positions
-        {            
-            if(map[dest_squares[i]] == 'O') dest_count++;               // increase 'x' cells counter if box is on 'x' cell
-       
-            if(map[dest_squares[i]] == ' ')                             // if 'x' cell has been erased
-                map[dest_squares[i]] = 'x';                             // restore it
-        }
-       
-        // if all boxes are on it's places break out of game loop
-        if(dest_num == dest_count)
-        {
-            print YOU WIN;
-            break;
-        }      
-    }
-    return 0;"
+(key =='w')ifTrue: [
+	(soko moveCharacterOffset: -8)].
+
+(key =='s')ifTrue: [ 
+	soko moveCharacterOffset: (soko maxWidth)].
+
+(key =='a')ifTrue: [ 
+	soko moveCharacterOffset: -1].
+
+(key =='d')ifTrue: [ 
+	soko moveCharacterOffset: 1].
+
+(key =='exit')ifTrue: [ soko emergencyStop ].
+
+
 
 ]
 
@@ -197,44 +168,45 @@ Sokoban >> maxWidth [
 ]
 
 { #category : #mainMethods }
-Sokoban >> moveCharacterX: xPos y: yPos offset: offsetNumber [
+Sokoban >> moveCharacterOffset: offsetNumber [
 
 	| newPosition |
 	(mapArray at: playerPosition + offsetNumber) ~= $# ifTrue: [ "1st if"
-		(mapArray at: playerPosition + offsetNumber == $B)
-		| (mapArray at: playerPosition + offsetNumber == $O)
-		& (mapArray at: playerPosition + (offsetNumber * 2) ~= $#)
-		| (mapArray at: playerPosition + (offsetNumber * 2) ~= $B)
-		| (mapArray at: playerPosition + (offsetNumber * 2) ~= $O)
+		((mapArray at: (playerPosition + offsetNumber)) == $B)  
+		| ((mapArray at: (playerPosition + offsetNumber)) == $O)
+		& ((mapArray at: playerPosition + (offsetNumber * 2)) ~= $#)
+		| ((mapArray at: playerPosition + (offsetNumber * 2)) ~= $B)
+		| ((mapArray at: playerPosition + (offsetNumber * 2)) ~= $O)
 			ifTrue: [ "2nd if"
-				mapArray playerPosition: Character space.
+				mapArray at: playerPosition put: Character space.
 				x := x + offsetNumber.
 				(mapArray at: playerPosition + offsetNumber) == Character space 
 					ifTrue: [ "3rd if Open"
 						newPosition := playerPosition + offsetNumber.
-						mapArray newPosition: $B ]. "3rd if close"
-				(mapArray at: playerPosition + offsetNumber == $x)
+						mapArray at: newPosition put: $B ]. "3rd if close"
+				((mapArray at: (playerPosition + offsetNumber)) == $x)
 					ifTrue: [ 
 						newPosition := playerPosition + offsetNumber.
-						mapArray newPosition: $O ]
+						mapArray at: newPosition put: $O ]
 					ifFalse: [ 
 						newPosition := playerPosition - offsetNumber.
-						self mapArray newPosition: $@ ]. 
-					mapArray playerPosition: $@]
+						mapArray at: newPosition put: $@. 
+						^ self].
+					
+				mapArray at: playerPosition put: $@ ] 
 			ifFalse: [ 
 				mapArray playerPosition: Character space.
 				x := x + offsetNumber.
-				mapArray playerPosition: $@ ] ]
+				mapArray playerPosition: $@ ] ] 
 ]
 
 { #category : #'getteres and setters' }
 Sokoban >> playerPosition [
 
-| playerPosition1 |
 
-playerPosition1 := (((y * mapWidth) +x) -1).
+playerPosition := ((((y-1) * mapWidth) +x)).
 
-^ playerPosition1.
+^ playerPosition.
 
 
 ]
@@ -243,14 +215,6 @@ playerPosition1 := (((y * mapWidth) +x) -1).
 Sokoban >> playerPosition: anInteger [
 
 	playerPosition := anInteger.
-]
-
-{ #category : #initialization }
-Sokoban >> printOn: aStream [
-
-super printOn: aStream.
-aStream nextPutAll: ' with value: '.
-mapArray do: [:i | aStream << i printString ].
 ]
 
 { #category : #'getteres and setters' }
