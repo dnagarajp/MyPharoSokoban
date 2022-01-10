@@ -50,10 +50,9 @@ SokobanTest >> testMoveCharacterRight [
 	| map |
 	map := Sokoban new.
 	map moveCharacterOffset: 1.
-
 	self assert: map x equals: 4.
 	self assert: map y equals: 4.
-	
+	map display.
 ]
 
 { #category : #test }

@@ -61,8 +61,8 @@ Sokoban >> desSquaresCount [
 
 { #category : #mainMethods }
 Sokoban >> display [
-
-	self asString traceCr
+Transcript clear.
+	self asString traceCr.
 ]
 
 { #category : #mainMethods }
@@ -109,7 +109,7 @@ Sokoban >> mainToCallFucntion: key [
 
 soko:= self class new.
 
-(key =='d')ifTrue: [ 
+(key =='w')ifTrue: [ 
 	soko moveCharacterOffset: (0-(soko maxWidth))].
 
 (key =='s')ifTrue: [ 
@@ -169,39 +169,47 @@ Sokoban >> maxWidth [
 Sokoban >> moveCharacterOffset: offsetNumber [
 
 	| newPosition |
+1 halt.
 	(mapArray at: playerPosition + offsetNumber) ~= $# ifTrue: ["1st If:::"  "if player doesn't hit the wall"
-		((mapArray at: (playerPosition + offsetNumber)) == $B)   "if player hits the box"
-		| ((mapArray at: (playerPosition + offsetNumber)) == $O) " or box on 'x' cell"
-		& ((mapArray at: playerPosition + (offsetNumber * 2)) ~= $#)   " and box doesn't hit the wall"
-		| ((mapArray at: playerPosition + (offsetNumber * 2)) ~= $B)    "or another box"
-		| ((mapArray at: playerPosition + (offsetNumber * 2)) ~= $O)   "or box on 'x' cell"
-			ifTrue: [ "2nd if:::"  
+		(((mapArray at: (playerPosition + offsetNumber)) == $B)   "if player hits the box"
+		
+		or:[((mapArray at: (playerPosition + offsetNumber)) == $O) " or box on 'x' cell"
+		and:[((mapArray at: playerPosition + (offsetNumber * 2)) ~= $#)   " and box doesn't hit the wall"
+		or: [((mapArray at: playerPosition + (offsetNumber * 2)) ~= $B)    "or another box"
+		or: [((mapArray at: playerPosition + (offsetNumber * 2)) ~= $O)]]] ])  "or box on 'x' cell"
+			ifTrue: [ |playerMoved| 
+				playerMoved := false."2nd if:::"  
 				"mapArray at: playerPosition put: Character space. ""clear previous player position"""
-				mapArray copyReplaceFrom: playerPosition to: playerPosition  with: ' '. "clear previous player position"
-				x := x + offsetNumber.  "update the player's co- ordinate"
+				mapArray := mapArray copyReplaceFrom: playerPosition to: playerPosition  with: ' '. "clear previous player position"
+				x := x + offsetNumber. 
+				self playerPosition. "update the player's co- ordinate"
 				(mapArray at: playerPosition + offsetNumber) == Character space " if the square next to the box empty"
 					ifTrue: [ "3rd if true" ""
 						newPosition := playerPosition + offsetNumber. ""
 				"		mapArray at: newPosition put: $B ].""push the box to a new position"""
-					mapArray copyReplaceFrom: newPosition  to: newPosition   with: 'B']."push the box to a new position"
-				((mapArray at: (playerPosition + offsetNumber)) == $x) " if the square next to the box is 'x'"
-					ifTrue: [  "3rd else if"
+					mapArray := mapArray copyReplaceFrom: newPosition  to: newPosition   with: 'B'.playerMoved := true]."push the box to a new position"
+				(((mapArray at: (playerPosition + offsetNumber)) == $x & (playerMoved == false))) " if the square next to the box is 'x'"
+					ifTrue: [ 
+						playerMoved := true. "3rd else if"
 						newPosition := playerPosition + offsetNumber.""
 					"	mapArray at: newPosition put: $O ]     ""Push the box on its place/target"""
-               mapArray copyReplaceFrom: newPosition  to: newPosition   with: 'O']     "Push the box on its place/target"
-					ifFalse: [ "3rd else"
+               mapArray := mapArray copyReplaceFrom: newPosition  to: newPosition   with: 'O'].     "Push the box on its place/target"
+					playerMoved ifFalse: [ "3rd else"
 						newPosition := playerPosition - offsetNumber.
 						"mapArray at: newPosition put: $@. ""if the box hits the wall or another box"""". """"dont push it any further""""""
 						^ self].""""	""3rd if close"""
-							mapArray copyReplaceFrom: newPosition  to: newPosition  with: '@'. "if the box hits the wall or another box"". ""dont push it any further"""
+							mapArray := mapArray copyReplaceFrom: newPosition  to: newPosition  with: '@'. "if the box hits the wall or another box"". ""dont push it any further"""
 						^ self].""	"3rd if close"
 				"mapArray at: playerPosition put: $@ ] ""draw the player position in the new position"" ""2nd if closure."""
-			mapArray copyReplaceFrom: playerPosition  to: playerPosition  with:'@' ] "draw the player position in the new position" "2nd if closure."
+			mapArray := mapArray copyReplaceFrom: playerPosition  to: playerPosition  with:'@' ] "draw the player position in the new position" "2nd if closure."
 			
 			ifFalse: [
-				mapArray playerPosition: Character space.  "clear the player position"
+		"		mapArray playerPosition: Character space.  ""clear the player position"""
+				mapArray := mapArray copyReplaceFrom: playerPosition  to: playerPosition  with:' '.
 				x := x + offsetNumber."update the player co-ordinate".
-				mapArray playerPosition: $@ ] ] "1st if closure" "draw the player position in the new position"
+				self playerPosition.
+				"mapArray playerPosition: $@ "
+				mapArray := mapArray copyReplaceFrom: playerPosition  to: playerPosition  with:'@'] ] "1st if closure" "draw the player position in the new position"
 ]
 
 { #category : #'getteres and setters' }
