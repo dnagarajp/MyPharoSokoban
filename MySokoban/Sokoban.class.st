@@ -103,8 +103,8 @@ Sokoban >> mainToCallFucntion: key [
 
 soko:= self class new.
 
-(key =='w')ifTrue: [
-	(soko moveCharacterOffset: -8)].
+(key =='d')ifTrue: [ 
+	soko moveCharacterOffset: (0-(soko maxWidth))].
 
 (key =='s')ifTrue: [ 
 	soko moveCharacterOffset: (soko maxWidth)].
@@ -115,7 +115,7 @@ soko:= self class new.
 (key =='d')ifTrue: [ 
 	soko moveCharacterOffset: 1].
 
-(key =='exit')ifTrue: [ soko emergencyStop ].
+
 
 
 
