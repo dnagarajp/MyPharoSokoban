@@ -1,3 +1,6 @@
+"
+Implementation of Sokoban game
+"
 Class {
 	#name : #Sokoban,
 	#superclass : #Object,
@@ -50,12 +53,6 @@ Sokoban >> calculateDesSquares [
 	
 ]
 
-{ #category : #'getteres and setters' }
-Sokoban >> desSquaresArray [
-
-	^ desSquaresArray
-]
-
 { #category : #mainMethods }
 Sokoban >> desSquaresCount [
 
@@ -100,6 +97,7 @@ Sokoban >> initialize [
 
 { #category : #mainMethods }
 Sokoban >> mainToCallFucntion: key [
+"implementation is in progress still"
 
 |soko|
 
@@ -136,7 +134,7 @@ Sokoban >> mapArraySize [
 ^ mapArray size.
 ]
 
-{ #category : #getters }
+{ #category : #initialization }
 Sokoban >> mapInitialize [
 
 	mapArray  :=   '#####   ',
@@ -149,12 +147,6 @@ Sokoban >> mapInitialize [
     '#B OBBx#',
     '#   x  #',
     '########'.
-]
-
-{ #category : #mainMethods }
-Sokoban >> mapStoreLine: asString atRow: anInteger [
-
-(1 to: mapWidth ) do: [ :each | mapArray at: anInteger at:each put: (asString at: each)].  
 ]
 
 { #category : #'getteres and setters' }
@@ -171,33 +163,33 @@ Sokoban >> maxWidth [
 Sokoban >> moveCharacterOffset: offsetNumber [
 
 	| newPosition |
-	(mapArray at: playerPosition + offsetNumber) ~= $# ifTrue: [ "1st if"
-		((mapArray at: (playerPosition + offsetNumber)) == $B)  
-		| ((mapArray at: (playerPosition + offsetNumber)) == $O)
-		& ((mapArray at: playerPosition + (offsetNumber * 2)) ~= $#)
-		| ((mapArray at: playerPosition + (offsetNumber * 2)) ~= $B)
-		| ((mapArray at: playerPosition + (offsetNumber * 2)) ~= $O)
-			ifTrue: [ "2nd if"
-				mapArray at: playerPosition put: Character space.
-				x := x + offsetNumber.
-				(mapArray at: playerPosition + offsetNumber) == Character space 
-					ifTrue: [ "3rd if Open"
-						newPosition := playerPosition + offsetNumber.
-						mapArray at: newPosition put: $B ]. "3rd if close"
-				((mapArray at: (playerPosition + offsetNumber)) == $x)
-					ifTrue: [ 
-						newPosition := playerPosition + offsetNumber.
-						mapArray at: newPosition put: $O ]
-					ifFalse: [ 
+	(mapArray at: playerPosition + offsetNumber) ~= $# ifTrue: ["1st If:::"  "if player doesn't hit the wall"
+		((mapArray at: (playerPosition + offsetNumber)) == $B)   "if player hits the box"
+		| ((mapArray at: (playerPosition + offsetNumber)) == $O) " or box on 'x' cell"
+		& ((mapArray at: playerPosition + (offsetNumber * 2)) ~= $#)   " and box doesn't hit the wall"
+		| ((mapArray at: playerPosition + (offsetNumber * 2)) ~= $B)    "or another box"
+		| ((mapArray at: playerPosition + (offsetNumber * 2)) ~= $O)   "or box on 'x' cell"
+			ifTrue: [ "2nd if:::"  
+				mapArray at: playerPosition put: Character space. "clear previous player position"
+				x := x + offsetNumber.  "update the player's co- ordinate"
+				(mapArray at: playerPosition + offsetNumber) == Character space " if the square next to the box empty"
+					ifTrue: [ "3rd if true" ""
+						newPosition := playerPosition + offsetNumber. ""
+						mapArray at: newPosition put: $B ]."push the box to a new position"
+				((mapArray at: (playerPosition + offsetNumber)) == $x) " if the square next to the box is 'x'"
+					ifTrue: [  "3rd else if"
+						newPosition := playerPosition + offsetNumber.""
+						mapArray at: newPosition put: $O ]     "Push the box on its place/target"
+					ifFalse: [ "3rd else"
 						newPosition := playerPosition - offsetNumber.
-						mapArray at: newPosition put: $@. 
-						^ self].
-					
-				mapArray at: playerPosition put: $@ ] 
-			ifFalse: [ 
-				mapArray playerPosition: Character space.
-				x := x + offsetNumber.
-				mapArray playerPosition: $@ ] ] 
+						mapArray at: newPosition put: $@. "if the box hits the wall or another box"". ""dont push it any further"""
+						^ self].""	"3rd if close"
+				mapArray at: playerPosition put: $@ ] "draw the player position in the new position" "2nd if closure."
+			
+			ifFalse: [
+				mapArray playerPosition: Character space.  "clear the player position"
+				x := x + offsetNumber."update the player co-ordinate".
+				mapArray playerPosition: $@ ] ] "1st if closure" "draw the player position in the new position"
 ]
 
 { #category : #'getteres and setters' }

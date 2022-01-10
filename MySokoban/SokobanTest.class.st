@@ -19,7 +19,22 @@ SokobanTest >> setUp [
 { #category : #tests }
 SokobanTest >> testCalculateDesSquares [
 
-	self assert: sokoban desSquaresCount equals: 8
+	self assert: sokoban  desSquaresCount equals: 8
+]
+
+{ #category : #test }
+SokobanTest >> testGetPositionManXY [
+
+	self assert: sokoban x equals: 3.
+	self assert: sokoban y equals: 4
+]
+
+{ #category : #test }
+SokobanTest >> testInitializeWidthAndHeight [
+
+self assert: sokoban maxWidth equals: 8.
+self assert: sokoban maxHeight equals: 10.
+
 ]
 
 { #category : #tests }
@@ -30,7 +45,7 @@ self assert: ( sokoban  mapArray at:27 )  equals: $@.
 ]
 
 { #category : #test }
-SokobanTest >> testMoveCharacterXYOffset [
+SokobanTest >> testMoveCharacterRight [
 
 	| map |
 	map := Sokoban new.
@@ -38,12 +53,12 @@ SokobanTest >> testMoveCharacterXYOffset [
 
 	self assert: map x equals: 4.
 	self assert: map y equals: 4.
+	
 ]
 
 { #category : #test }
 SokobanTest >> testPlayerPosition [
 
 self assert: sokoban playerPosition equals: 27.
-self assert: sokoban x equals: 3.
-self assert: sokoban y equals: 4.
+
 ]
