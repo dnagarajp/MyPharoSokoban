@@ -40,12 +40,6 @@ Sokoban class >> playGame [
 
 ]
 
-{ #category : #'getteres and setters' }
-Sokoban >> asString [
-	^ super asString
-	
-]
-
 { #category : #mainMethods }
 Sokoban >> calculateDesSquares [
 
@@ -63,6 +57,12 @@ Sokoban >> calculateDesSquares [
 Sokoban >> desSquaresCount [
 
 	^ desSquaresArray size.
+]
+
+{ #category : #mainMethods }
+Sokoban >> display [
+
+	self asString traceCr
 ]
 
 { #category : #mainMethods }
