@@ -25,20 +25,16 @@ SokobanTest >> testCalculateDesSquares [
 { #category : #test }
 SokobanTest >> testD [
 
-	|soko|
-	soko:= Sokoban new.
+	| soko |
+	soko := Sokoban new.
 	soko asString.
 
-	soko r.soko r.
+	soko r.
+	soko r.
 	soko d.
-	self assert: soko playerPosition equals: 37.
-]
-
-{ #category : #test }
-SokobanTest >> testGetPositionManXY [
-
-	self assert: sokoban x equals: 3.
-	self assert: sokoban y equals: 4
+	soko l.
+	soko d.
+	self assert: soko playerPosition equals: 36
 ]
 
 { #category : #test }
@@ -87,17 +83,6 @@ SokobanTest >> testManPositionNumber [
 
 self assert: ( sokoban  mapArray at:27 )  equals: $@.
 
-]
-
-{ #category : #test }
-SokobanTest >> testMoveCharacterRight [
-
-	| map |
-	map := Sokoban new.
-	map moveCharacterOffset: 1.
-	self assert: map x equals: 4.
-	self assert: map y equals: 4.
-	map display.
 ]
 
 { #category : #test }
