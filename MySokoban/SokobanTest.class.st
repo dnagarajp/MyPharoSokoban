@@ -19,7 +19,7 @@ SokobanTest >> setUp [
 { #category : #tests }
 SokobanTest >> testCalculateDesSquares [
 
-	self assert: sokoban  desSquaresCount equals: 8
+	self assert: sokoban desSquaresArray size equals: 8
 ]
 
 { #category : #test }

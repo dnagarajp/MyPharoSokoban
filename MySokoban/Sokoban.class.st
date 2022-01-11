@@ -65,12 +65,6 @@ Sokoban >> desSquaresArray [
 ]
 
 { #category : #mainMethods }
-Sokoban >> desSquaresCount [
-
-	^ desSquaresArray size.
-]
-
-{ #category : #mainMethods }
 Sokoban >> display [
 
 	Transcript clear.
@@ -208,10 +202,11 @@ Sokoban >> r [
 
 { #category : #mainMethods }
 Sokoban >> resetXCells [
-|desCount |
+|desCount size|
 
 desCount  := 0.
-1 to: 8 do: [:i | 
+size := desSquaresArray size.
+1 to: size do: [:i | 
   (mapArray  at: (desSquaresArray at: i)) = $O
     ifTrue: [desCount := desCount + 1].
   ( mapArray  at: (desSquaresArray at: i)) = (Character space)
