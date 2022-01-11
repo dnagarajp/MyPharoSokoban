@@ -258,7 +258,6 @@ Sokoban >> printOn: stream [
 { #category : #mainMethods }
 Sokoban >> r [
 
-	1 halt.
 	self moveCharacterOffset: 1.
 	self resetXCells
 ]

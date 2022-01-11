@@ -23,6 +23,18 @@ SokobanTest >> testCalculateDesSquares [
 ]
 
 { #category : #test }
+SokobanTest >> testD [
+
+	|soko|
+	soko:= Sokoban new.
+	soko asString.
+
+	soko r.soko r.
+	soko d.
+	self assert: soko playerPosition equals: 37.
+]
+
+{ #category : #test }
 SokobanTest >> testGetPositionManXY [
 
 	self assert: sokoban x equals: 3.
@@ -44,9 +56,20 @@ SokobanTest >> testL [
 	soko:= Sokoban new.
 	soko asString.
 
-	soko r.soko r.soko r.soko r.
+	soko r.soko r.
 	soko l.
-	self assert: soko asString equals: '#####   
+	self assert: soko playerPosition equals: 28.
+]
+
+{ #category : #test }
+SokobanTest >> testLWithString [
+
+	|soko|
+	soko:= Sokoban new.
+
+	soko r.soko r.
+	soko l.
+	self assert: soko asString equals:'#####   
 #xB ### 
 ###   # 
 #x @ B# 
@@ -55,8 +78,8 @@ SokobanTest >> testL [
 # # x ##
 #B OBBx#
 #   x  #
-########'
-	
+########
+'
 ]
 
 { #category : #tests }
@@ -91,9 +114,33 @@ SokobanTest >> testR [
 	soko:= Sokoban new.
 	soko asString.
 
+	soko r.soko r.
+	self assert: soko playerPosition equals: 29.
+
+]
+
+{ #category : #test }
+SokobanTest >> testRR [
+
+	|soko|
+	soko:= Sokoban new.
+	soko asString.
+
 	soko r.soko r.soko r.soko r.
 	self assert: soko playerPosition equals: 29.
-	self assert: soko playerPosition equals: '#####   
+	
+]
+
+{ #category : #test }
+SokobanTest >> testRWithString [
+
+	|soko|
+	soko:= Sokoban new.
+	soko asString.
+
+	soko r.soko r.
+	self assert: soko playerPosition equals: 29.
+	self assert: soko asString equals: '#####   
 #xB ### 
 ###   # 
 #x  @B# 
@@ -102,6 +149,19 @@ SokobanTest >> testR [
 # # x ##
 #B OBBx#
 #   x  #
-########'
+########
+'
 	
+]
+
+{ #category : #test }
+SokobanTest >> testU [
+
+	|soko|
+	soko:= Sokoban new.
+	soko asString.
+
+	soko r.soko r.
+	soko u.
+	self assert: soko playerPosition equals: 21.
 ]
