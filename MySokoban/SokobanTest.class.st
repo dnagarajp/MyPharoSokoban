@@ -37,6 +37,28 @@ self assert: sokoban maxHeight equals: 10.
 
 ]
 
+{ #category : #test }
+SokobanTest >> testL [
+
+	|soko|
+	soko:= Sokoban new.
+	soko asString.
+
+	soko r.soko r.soko r.soko r.
+	soko l.
+	self assert: soko asString equals: '#####   
+#xB ### 
+###   # 
+#x @ B# 
+### Bx# 
+#x##B # 
+# # x ##
+#B OBBx#
+#   x  #
+########'
+	
+]
+
 { #category : #tests }
 SokobanTest >> testManPositionNumber [
 
@@ -60,4 +82,26 @@ SokobanTest >> testPlayerPosition [
 
 self assert: sokoban playerPosition equals: 27.
 
+]
+
+{ #category : #test }
+SokobanTest >> testR [
+
+	|soko|
+	soko:= Sokoban new.
+	soko asString.
+
+	soko r.soko r.soko r.soko r.
+	self assert: soko playerPosition equals: 29.
+	self assert: soko playerPosition equals: '#####   
+#xB ### 
+###   # 
+#x  @B# 
+### Bx# 
+#x##B # 
+# # x ##
+#B OBBx#
+#   x  #
+########'
+	
 ]

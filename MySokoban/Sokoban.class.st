@@ -54,6 +54,19 @@ Sokoban >> calculateDesSquares [
 ]
 
 { #category : #mainMethods }
+Sokoban >> d [
+
+self moveCharacterOffset: mapWidth .
+self resetXCells. 
+]
+
+{ #category : #mainMethods }
+Sokoban >> desSquaresArray [
+
+	^ desSquaresArray
+]
+
+{ #category : #mainMethods }
 Sokoban >> desSquaresCount [
 
 	^ desSquaresArray size.
@@ -96,9 +109,16 @@ Sokoban >> initialize [
 	self calculateDesSquares.
 	self getPositionManXY.
 	self mapArraySize.
-	self playerPosition.
+	self setPlayerPosition.
 	
 	
+]
+
+{ #category : #mainMethods }
+Sokoban >> l [
+
+	self moveCharacterOffset: -1.
+	self resetXCells
 ]
 
 { #category : #mainMethods }
@@ -169,7 +189,7 @@ Sokoban >> maxWidth [
 Sokoban >> moveCharacterOffset: offsetNumber [
 
 	| newPosition |
-1 halt.
+
 	(mapArray at: playerPosition + offsetNumber) ~= $# ifTrue: ["1st If:::"  "if player doesn't hit the wall"
 		(((mapArray at: (playerPosition + offsetNumber)) == $B)   "if player hits the box"
 		
@@ -182,7 +202,7 @@ Sokoban >> moveCharacterOffset: offsetNumber [
 				"mapArray at: playerPosition put: Character space. ""clear previous player position"""
 				mapArray := mapArray copyReplaceFrom: playerPosition to: playerPosition  with: ' '. "clear previous player position"
 				x := x + offsetNumber. 
-				self playerPosition. "update the player's co- ordinate"
+				self setPlayerPosition . "update the player's co- ordinate"
 				(mapArray at: playerPosition + offsetNumber) == Character space " if the square next to the box empty"
 					ifTrue: [ "3rd if true" ""
 						newPosition := playerPosition + offsetNumber. ""
@@ -207,16 +227,13 @@ Sokoban >> moveCharacterOffset: offsetNumber [
 		"		mapArray playerPosition: Character space.  ""clear the player position"""
 				mapArray := mapArray copyReplaceFrom: playerPosition  to: playerPosition  with:' '.
 				x := x + offsetNumber."update the player co-ordinate".
-				self playerPosition.
+				self setPlayerPosition.
 				"mapArray playerPosition: $@ "
 				mapArray := mapArray copyReplaceFrom: playerPosition  to: playerPosition  with:'@'] ] "1st if closure" "draw the player position in the new position"
 ]
 
 { #category : #'getteres and setters' }
 Sokoban >> playerPosition [
-
-
-playerPosition := ((((y-1) * mapWidth) +x)).
 
 ^ playerPosition.
 
@@ -236,6 +253,47 @@ Sokoban >> printOn: stream [
 			stream nextPut: (mapArray at: (index - 1) * mapWidth + index2 ) ].
 		stream crlf ].
 	
+]
+
+{ #category : #mainMethods }
+Sokoban >> r [
+
+	1 halt.
+	self moveCharacterOffset: 1.
+	self resetXCells
+]
+
+{ #category : #mainMethods }
+Sokoban >> resetXCells [
+|desCount soko|
+
+soko := Sokoban new.
+
+desCount  := 0.
+1 to: 8 do: [:i | 
+  (mapArray  at: (soko desSquaresArray at: i)) == 'O'
+    ifTrue: [desCount := desCount + 1].
+  (mapArray  at: (soko desSquaresArray at: i)) == ' '
+    ifTrue: [ mapArray  at: (soko desSquaresArray at: i) put: 'x'
+	]
+].
+]
+
+{ #category : #'getteres and setters' }
+Sokoban >> setPlayerPosition [
+
+playerPosition := ((((y-1) * mapWidth) +x)).
+
+
+
+
+]
+
+{ #category : #mainMethods }
+Sokoban >> u [
+
+self moveCharacterOffset: ((0-1)* mapWidth) .
+self resetXCells. 
 ]
 
 { #category : #'getteres and setters' }
