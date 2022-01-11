@@ -73,7 +73,6 @@ Sokoban >> desSquaresCount [
 { #category : #mainMethods }
 Sokoban >> display [
 
-	 
 	Transcript clear.
 	self asString traceCr
 ]
@@ -103,32 +102,6 @@ Sokoban >> l [
 
 	self moveCharacterOffset: -1.
 	self resetXCells.
-]
-
-{ #category : #mainMethods }
-Sokoban >> mainToCallFucntion: key [
-"implementation is in progress still"
-
-|soko|
-
-soko:= self class new.
-
-(key =='w')ifTrue: [ 
-	soko moveCharacterOffset: (0-(soko maxWidth))].
-
-(key =='s')ifTrue: [ 
-	soko moveCharacterOffset: (soko maxWidth)].
-
-(key =='a')ifTrue: [ 
-	soko moveCharacterOffset: -1].
-
-(key =='d')ifTrue: [ 
-	soko moveCharacterOffset: 1].
-
-
-
-
-
 ]
 
 { #category : #'getteres and setters' }
@@ -219,11 +192,11 @@ Sokoban >> playerPosition: anInteger [
 
 { #category : #'getteres and setters' }
 Sokoban >> printOn: stream [
-	(1 to: mapHeight) do: [ :index |
-		1 to: mapWidth do: [ :index2 |
-			stream nextPut: (mapArray at: (index - 1) * mapWidth + index2 ) ].
-		stream crlf ].
-	
+
+	(1 to: mapHeight) do: [ :index | 
+		1 to: mapWidth do: [ :index2 | 
+			stream nextPut: (mapArray at: index - 1 * mapWidth + index2) ].
+		stream cr ]
 ]
 
 { #category : #directions }

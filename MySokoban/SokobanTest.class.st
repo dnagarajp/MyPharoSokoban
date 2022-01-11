@@ -60,12 +60,14 @@ SokobanTest >> testL [
 { #category : #test }
 SokobanTest >> testLWithString [
 
-	|soko|
-	soko:= Sokoban new.
+	| soko |
+	soko := Sokoban new.
 
-	soko r.soko r.
+	soko r.
+	soko r.
 	soko l.
-	self assert: soko asString equals:'#####   
+
+	self assert: soko asString equals: '#####   
 #xB ### 
 ###   # 
 #x @ B# 
