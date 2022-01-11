@@ -155,6 +155,18 @@ SokobanTest >> testRWithString [
 ]
 
 { #category : #test }
+SokobanTest >> testResetX [
+
+	|soko|
+	soko:= Sokoban new.
+	
+	soko l.
+	soko r.
+	soko  resetXCells. 
+   self assert: ( soko  mapArray at:26 )  equals: $x.
+]
+
+{ #category : #test }
 SokobanTest >> testU [
 
 	|soko|

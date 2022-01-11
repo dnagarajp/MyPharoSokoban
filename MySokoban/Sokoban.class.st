@@ -264,16 +264,14 @@ Sokoban >> r [
 
 { #category : #mainMethods }
 Sokoban >> resetXCells [
-|desCount soko|
-
-soko := Sokoban new.
+|desCount |
 
 desCount  := 0.
 1 to: 8 do: [:i | 
-  (mapArray  at: (soko desSquaresArray at: i)) == 'O'
+  (mapArray  at: (desSquaresArray at: i)) = $O
     ifTrue: [desCount := desCount + 1].
-  (mapArray  at: (soko desSquaresArray at: i)) == ' '
-    ifTrue: [ mapArray  at: (soko desSquaresArray at: i) put: 'x'
+  ( mapArray  at: (desSquaresArray at: i)) = (Character space)
+    ifTrue: [mapArray  at: (desSquaresArray at: i) put: $x
 	]
 ].
 ]
