@@ -51,7 +51,7 @@ Sokoban >> calculateDesSquares [
 	
 ]
 
-{ #category : #mainMethods }
+{ #category : #directions }
 Sokoban >> d [
 
 self moveCharacterOffset: mapWidth .
@@ -72,8 +72,10 @@ Sokoban >> desSquaresCount [
 
 { #category : #mainMethods }
 Sokoban >> display [
-Transcript clear.
-	self asString traceCr.
+
+	 
+	Transcript clear.
+	self asString traceCr
 ]
 
 { #category : #mainMethods }
@@ -93,12 +95,10 @@ Sokoban >> initialize [
 	self calculateDesSquares.
 	self updatePlayerPosition.
 	self mapArraySize.
-	self updatePlayerPosition.
-	
-	
+	self updatePlayerPosition
 ]
 
-{ #category : #mainMethods }
+{ #category : #directions }
 Sokoban >> l [
 
 	self moveCharacterOffset: -1.
@@ -226,7 +226,7 @@ Sokoban >> printOn: stream [
 	
 ]
 
-{ #category : #mainMethods }
+{ #category : #directions }
 Sokoban >> r [
 
 	self moveCharacterOffset: 1.
@@ -247,7 +247,7 @@ desCount  := 0.
 ].
 ]
 
-{ #category : #mainMethods }
+{ #category : #directions }
 Sokoban >> u [
 
 self moveCharacterOffset: ((0-1)* mapWidth) .
