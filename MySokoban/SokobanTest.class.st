@@ -46,6 +46,36 @@ self assert: sokoban maxHeight equals: 10.
 ]
 
 { #category : #test }
+SokobanTest >> testIsBox [
+
+	| soko |
+	soko := Sokoban new.
+	self assert: (soko isBox: 1).
+
+]
+
+{ #category : #test }
+SokobanTest >> testIsBoxDoesNotHitAnotherBox [
+
+	| soko |
+	soko := Sokoban new.
+	self assert: (soko isBoxDoesNotHitAnotherWall: 1).
+	
+]
+
+{ #category : #test }
+SokobanTest >> testIsNoWall [
+
+	| soko |
+	soko := Sokoban new.
+	self assert: (soko isNoWall: 1).
+	self assert: (soko isNoWall: 1) value equals: true.
+	self assert: (soko isNoWall: -1) value equals: true.
+	self assert: (soko isNoWall: 8) value equals: false.
+	self assert: (soko isNoWall: -8) value equals: false
+]
+
+{ #category : #test }
 SokobanTest >> testL [
 
 	|soko|
@@ -88,10 +118,13 @@ self assert: ( sokoban  mapArray at:27 )  equals: $@.
 ]
 
 { #category : #test }
-SokobanTest >> testPlayerPosition [
+SokobanTest >> testPutPlayerInCurrentPosition [
 
-self assert: sokoban playerPosition equals: 27.
-
+	| soko |
+	soko := Sokoban new.
+	soko putPlayerInCurrentPosition: 1.
+	self assert: (soko mapArray at: soko playerPosition) equals: $@.
+	self assert: (soko mapArray at: soko playerPosition + 1) equals: $@
 ]
 
 { #category : #test }
@@ -142,14 +175,39 @@ SokobanTest >> testRWithString [
 ]
 
 { #category : #test }
-SokobanTest >> testResetX [
+SokobanTest >> testResetAndUpdateThePlayerPostion [
+
+	| soko |
+	soko := Sokoban new.
+	self assert: soko updatePlayerPosition playerPosition equals: 27.
+	soko resetAndUpdateThePlayerPostion: 1.
+   self
+		assert: (soko mapArray at: soko playerPosition)
+		equals: Character space.
+
+	self assert: (soko mapArray at: soko playerPosition + 1) equals: $@.
+	self assert: soko updatePlayerPosition playerPosition equals: 28
+]
+
+{ #category : #test }
+SokobanTest >> testResetPreviousPlayerPosition [
+
+	| soko |
+	soko := Sokoban new.
+	soko resetPreviousPlayerPosition.
+	self assert: (soko mapArray at: soko playerPosition) equals: Character space.
+
+]
+
+{ #category : #test }
+SokobanTest >> testResetXCells [
 
 	|soko|
 	soko:= Sokoban new.
 	
 	soko l.
 	soko r.
-	soko  resetXCells. 
+	soko resetXCells. 
    self assert: ( soko  mapArray at:26 )  equals: $x.
 ]
 
@@ -158,11 +216,7 @@ SokobanTest >> testU [
 
 	|soko|
 	soko:= Sokoban new.
-	soko asString.
-
-	soko r.soko r.
-	soko u.
-	self assert: soko playerPosition equals: 21.
+	self assert: (soko r;r;u) updatePlayerPosition playerPosition equals: 21.
 ]
 
 { #category : #test }
@@ -170,11 +224,7 @@ SokobanTest >> testUpdatePlayerPosition [
 
 	| soko |
 	soko := Sokoban new.
-
+   self assert: soko playerPosition  equals: 27.
 	soko r.
-	soko r.
-	soko u.
-	soko updatePlayerPosition.
-	
-	self assert: soko playerPosition equals: 21
+	self assert: soko updatePlayerPosition playerPosition  equals: 28
 ]

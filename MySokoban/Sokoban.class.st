@@ -71,13 +71,6 @@ Sokoban >> display [
 	self asString traceCr
 ]
 
-{ #category : #'getteres and setters' }
-Sokoban >> ifWallUpdateThePlayerPostion: offset [
-
-	self resetPreviousPlayerPosition.
-	self putPlayerInCurrentPosition: offset.
-]
-
 { #category : #initialization }
 Sokoban >> initialize [
 
@@ -86,13 +79,13 @@ Sokoban >> initialize [
 	desSquaresArray := OrderedCollection new.
 	self mapInitialize.
 	self calculateDesSquares.
-	self updatePlayerPosition.
-	self mapArraySize.
 	self updatePlayerPosition
 ]
 
 { #category : #'getteres and setters' }
 Sokoban >> isBox: offset [
+
+
 
 	^ (mapArray at: playerPosition + offset) = $B
 ]
@@ -106,7 +99,7 @@ Sokoban >> isBoxDoesNotHitAnotherBox: offset [
 { #category : #'getteres and setters' }
 Sokoban >> isBoxDoesNotHitAnotherWall: offset [
 
-	^  (mapArray at: playerPosition + (offset * 2)) ~= $# 
+	^ (mapArray at: playerPosition + (offset * 2)) ~= $#
 ]
 
 { #category : #'getteres and setters' }
@@ -157,12 +150,6 @@ Sokoban >> mapArray [
 
 ]
 
-{ #category : #'getteres and setters' }
-Sokoban >> mapArraySize [
-
-^ mapArray size.
-]
-
 { #category : #initialization }
 Sokoban >> mapInitialize [
 
@@ -210,8 +197,8 @@ Sokoban >> moveCharacterOffset: offset [
 					self
 						pushBoxOnTargetAndUpdatePlayerPosition: newBoxPosition
 						with: offset ] ]
-			ifFalse: [ 
-				self ifWallUpdateThePlayerPostion: offset ] ].
+			ifFalse: [ self resetAndUpdateThePlayerPostion: offset ] ].
+
 	self updatePlayerPosition
 ]
 
@@ -227,12 +214,6 @@ Sokoban >> playerPosition [
 ^ playerPosition.
 
 
-]
-
-{ #category : #'getteres and setters' }
-Sokoban >> playerPosition: anInteger [
-
-	playerPosition := anInteger.
 ]
 
 { #category : #'getteres and setters' }
@@ -291,9 +272,10 @@ Sokoban >> r [
 ]
 
 { #category : #'getteres and setters' }
-Sokoban >> resetPlayerPosition: offset [
+Sokoban >> resetAndUpdateThePlayerPostion: offset [
 
-	^ 	mapArray at: playerPosition put: Character space
+	self resetPreviousPlayerPosition.
+	self putPlayerInCurrentPosition: offset.
 ]
 
 { #category : #'getteres and setters' }
@@ -327,7 +309,5 @@ self resetXCells.
 { #category : #mainMethods }
 Sokoban >> updatePlayerPosition [
 
-	playerPosition := mapArray indexOf: $@.
-
-
+	playerPosition := mapArray indexOf: $@
 ]
