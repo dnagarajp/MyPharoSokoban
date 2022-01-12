@@ -164,3 +164,17 @@ SokobanTest >> testU [
 	soko u.
 	self assert: soko playerPosition equals: 21.
 ]
+
+{ #category : #test }
+SokobanTest >> testUpdatePlayerPosition [
+
+	| soko |
+	soko := Sokoban new.
+
+	soko r.
+	soko r.
+	soko u.
+	soko updatePlayerPosition.
+	
+	self assert: soko playerPosition equals: 21
+]

@@ -71,11 +71,11 @@ Sokoban >> display [
 	self asString traceCr
 ]
 
-{ #category : #mainMethods }
-Sokoban >> displayMap [
+{ #category : #'getteres and setters' }
+Sokoban >> ifWallUpdateThePlayerPostion: offset [
 
-	0 to: (mapArray length)  do: [ :each | mapArray cr ].
-
+	self resetPreviousPlayerPosition.
+	self putPlayerInCurrentPosition: offset.
 ]
 
 { #category : #initialization }
@@ -92,9 +92,55 @@ Sokoban >> initialize [
 ]
 
 { #category : #'getteres and setters' }
-Sokoban >> isNoWall: offsetNumber [
+Sokoban >> isBox: offset [
 
-	^ (mapArray at: playerPosition + offsetNumber) ~= $#
+	^ (mapArray at: playerPosition + offset) = $B
+]
+
+{ #category : #'getteres and setters' }
+Sokoban >> isBoxDoesNotHitAnotherBox: offset [
+
+	^ (mapArray at: playerPosition + (offset * 2)) ~= $B
+]
+
+{ #category : #'getteres and setters' }
+Sokoban >> isBoxDoesNotHitAnotherWall: offset [
+
+	^  (mapArray at: playerPosition + (offset * 2)) ~= $# 
+]
+
+{ #category : #'getteres and setters' }
+Sokoban >> isBoxDoesNotHitOnTarget: offset [
+
+	^ (mapArray at: playerPosition + (offset * 2)) ~= $O
+]
+
+{ #category : #'getteres and setters' }
+Sokoban >> isBoxOnTarget: offset [
+
+	^ (mapArray at: playerPosition + offset) = $O.
+	
+
+
+]
+
+{ #category : #'getteres and setters' }
+Sokoban >> isNewBoxPositionIsEmpty: newBoxPosition [
+
+	^ (mapArray at: newBoxPosition) = Character space
+]
+
+{ #category : #'getteres and setters' }
+Sokoban >> isNewBoxPositionIsTarget: newBoxPosition [
+
+	^ (mapArray at: newBoxPosition) = $x
+]
+
+{ #category : #'getteres and setters' }
+Sokoban >> isNoWall: offset [
+
+	^ (mapArray at: playerPosition + offset) ~= $#
+	
 ]
 
 { #category : #directions }
@@ -143,32 +189,36 @@ Sokoban >> maxWidth [
 ]
 
 { #category : #mainMethods }
-Sokoban >> moveCharacterOffset: offsetNumber [
+Sokoban >> moveCharacterOffset: offset [
 
 	| newBoxPosition |
 	self updatePlayerPosition.
-1 halt.
-	(self isNoWall: offsetNumber) ifTrue: [ 
-		(((mapArray at: playerPosition + offsetNumber) = $B or: [ 
-			  (mapArray at: playerPosition + offsetNumber) = $O ]) and: [ 
-			 (mapArray at: playerPosition + (offsetNumber * 2)) ~= $# or: [ 
-				 (mapArray at: playerPosition + (offsetNumber * 2)) ~= $B or: [ 
-					 (mapArray at: playerPosition + (offsetNumber * 2)) ~= $O ] ] ])
-			ifTrue: [ 
-				newBoxPosition := playerPosition + (offsetNumber * 2).
-				(mapArray at: newBoxPosition) = Character space ifTrue: [ 
-					mapArray at: newBoxPosition put: $B.
-					mapArray at: playerPosition + offsetNumber put: $@.
-					mapArray at: playerPosition put: Character space ].
 
-				(mapArray at: newBoxPosition) = $x ifTrue: [ 
-					mapArray at: newBoxPosition put: $O.
-					mapArray at: playerPosition + offsetNumber put: $@.
-					mapArray at: playerPosition put: Character space ] ]
+	(self isNoWall: offset) ifTrue: [ 
+		(((self isBox: offset) or: [ self isBoxOnTarget: offset ]) and: [ 
+			 (self isBoxDoesNotHitAnotherWall: offset) or: [ 
+				 (self isBoxDoesNotHitAnotherBox: offset) or: [ 
+					 self isBoxDoesNotHitOnTarget: offset ] ] ])
+			ifTrue: [ 
+				newBoxPosition := self newBoxPosition: offset.
+				(self isNewBoxPositionIsEmpty: newBoxPosition) ifTrue: [ 
+					self
+						pushBoxOnEmptyCellAndUpdatePlayerPosition: newBoxPosition
+						with: offset ].
+
+				(self isNewBoxPositionIsTarget: newBoxPosition) ifTrue: [ 
+					self
+						pushBoxOnTargetAndUpdatePlayerPosition: newBoxPosition
+						with: offset ] ]
 			ifFalse: [ 
-				mapArray at: playerPosition put: Character space.
-				mapArray at: playerPosition + offsetNumber put: $@ ] ].
+				self ifWallUpdateThePlayerPostion: offset ] ].
 	self updatePlayerPosition
+]
+
+{ #category : #'getteres and setters' }
+Sokoban >> newBoxPosition: offset [
+
+	^ playerPosition + (offset * 2).
 ]
 
 { #category : #'getteres and setters' }
@@ -188,10 +238,49 @@ Sokoban >> playerPosition: anInteger [
 { #category : #'getteres and setters' }
 Sokoban >> printOn: stream [
 
-	(1 to: mapHeight) do: [ :index | 
-		1 to: mapWidth do: [ :index2 | 
-			stream nextPut: (mapArray at: index - 1 * mapWidth + index2) ].
+	1 to: mapHeight do: [ :x | 
+		1 to: mapWidth do: [ :y | 
+		stream nextPut: (mapArray at: (((x - 1) * mapWidth) + y)) ].
 		stream cr ]
+]
+
+{ #category : #'getteres and setters' }
+Sokoban >> pushBoxOnEmptyCellAndUpdatePlayerPosition: newBoxPosition with: offset [
+
+	self putBoxOnEmptyPosition: newBoxPosition.
+	self putCurrentPlayerPositionAndResetPreviousPlayerPosition: offset.
+]
+
+{ #category : #'getteres and setters' }
+Sokoban >> pushBoxOnTarget: newBoxPosition [
+
+	^ mapArray at: newBoxPosition put: $O.
+]
+
+{ #category : #'getteres and setters' }
+Sokoban >> pushBoxOnTargetAndUpdatePlayerPosition: newBoxPosition with: offset [
+
+	self pushBoxOnTarget: newBoxPosition.
+	self putCurrentPlayerPositionAndResetPreviousPlayerPosition: offset
+]
+
+{ #category : #'getteres and setters' }
+Sokoban >> putBoxOnEmptyPosition: newBoxPosition [
+
+	^ (mapArray at: newBoxPosition put: $B)
+]
+
+{ #category : #'getteres and setters' }
+Sokoban >> putCurrentPlayerPositionAndResetPreviousPlayerPosition: offset [
+
+	self putPlayerInCurrentPosition: offset.
+   self resetPreviousPlayerPosition. 
+]
+
+{ #category : #'getteres and setters' }
+Sokoban >> putPlayerInCurrentPosition: offset [
+
+	^ mapArray at: playerPosition + offset put: $@
 ]
 
 { #category : #directions }
@@ -199,6 +288,18 @@ Sokoban >> r [
 
 	self moveCharacterOffset: 1.
 	self resetXCells
+]
+
+{ #category : #'getteres and setters' }
+Sokoban >> resetPlayerPosition: offset [
+
+	^ 	mapArray at: playerPosition put: Character space
+]
+
+{ #category : #'getteres and setters' }
+Sokoban >> resetPreviousPlayerPosition [
+
+	^ mapArray at: playerPosition put: Character space
 ]
 
 { #category : #mainMethods }
