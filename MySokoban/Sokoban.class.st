@@ -91,6 +91,12 @@ Sokoban >> initialize [
 	self updatePlayerPosition
 ]
 
+{ #category : #'getteres and setters' }
+Sokoban >> isNoWall: offsetNumber [
+
+	^ (mapArray at: playerPosition + offsetNumber) ~= $#
+]
+
 { #category : #directions }
 Sokoban >> l [
 
@@ -141,32 +147,27 @@ Sokoban >> moveCharacterOffset: offsetNumber [
 
 	| newBoxPosition |
 	self updatePlayerPosition.
+1 halt.
+	(self isNoWall: offsetNumber) ifTrue: [ 
+		(((mapArray at: playerPosition + offsetNumber) = $B or: [ 
+			  (mapArray at: playerPosition + offsetNumber) = $O ]) and: [ 
+			 (mapArray at: playerPosition + (offsetNumber * 2)) ~= $# or: [ 
+				 (mapArray at: playerPosition + (offsetNumber * 2)) ~= $B or: [ 
+					 (mapArray at: playerPosition + (offsetNumber * 2)) ~= $O ] ] ])
+			ifTrue: [ 
+				newBoxPosition := playerPosition + (offsetNumber * 2).
+				(mapArray at: newBoxPosition) = Character space ifTrue: [ 
+					mapArray at: newBoxPosition put: $B.
+					mapArray at: playerPosition + offsetNumber put: $@.
+					mapArray at: playerPosition put: Character space ].
 
-	(mapArray at: playerPosition + offsetNumber) ~= $#
-		ifTrue: [ "1st If:::""if player doesn't hit the wall""1st if closure""draw the player position in the new position"
-			(((mapArray at: playerPosition + offsetNumber) = $B or: [ 
-				  (mapArray at: playerPosition + offsetNumber) = $O ]) and: [ 
-				 (mapArray at: playerPosition + (offsetNumber * 2)) ~= $# or: [ " and box doesn't hit the wall"
-					 (mapArray at: playerPosition + (offsetNumber * 2)) ~= $B or: [ "or another box" 
-						 (mapArray at: playerPosition + (offsetNumber * 2)) ~= $O ] ] ]) 
-				ifTrue: [ "2nd if:::"
-					newBoxPosition := playerPosition + (offsetNumber * 2).
-					(mapArray at: newBoxPosition) = Character space ifTrue: [ "3rd if true"""
-						mapArray at: newBoxPosition put: $B.
-						"		mapArray at: newPosition put: $B ].""push the box to a new position"""
-						mapArray at: playerPosition + offsetNumber put: $@.
-						mapArray at: playerPosition put: Character space ]. " if the square next to the box empty" "push the box to a new position"
-
-					(mapArray at: newBoxPosition) = $x ifTrue: [ 
-						mapArray at: newBoxPosition put: $O.
-						mapArray at: playerPosition + offsetNumber put: $@.
-						mapArray at: playerPosition put: Character space ] ] 
-		ifFalse: [ "if player hits the box"" or box on 'x' cell""or box on 'x' cell""		mapArray playerPosition: Character space.  ""clear the player position"""
-
-			mapArray at: playerPosition put: Character space.
-			mapArray at: playerPosition + offsetNumber put: $@
-
-			"mapArray playerPosition: $@ " ]].
+				(mapArray at: newBoxPosition) = $x ifTrue: [ 
+					mapArray at: newBoxPosition put: $O.
+					mapArray at: playerPosition + offsetNumber put: $@.
+					mapArray at: playerPosition put: Character space ] ]
+			ifFalse: [ 
+				mapArray at: playerPosition put: Character space.
+				mapArray at: playerPosition + offsetNumber put: $@ ] ].
 	self updatePlayerPosition
 ]
 
