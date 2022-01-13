@@ -40,8 +40,8 @@ SokobanTest >> testD [
 { #category : #test }
 SokobanTest >> testInitialize [
 
-	self assert: sokoban maxWidth equals: 8.
-	self assert: sokoban maxHeight equals: 10.
+	self assert: sokoban mapWidth equals: 8.
+	self assert: sokoban mapHeight equals: 10.
 	self assert: sokoban desSquaresArray size equals: 8.
 	self assert: sokoban updatePlayerPosition playerPosition equals: 27.
 	self assert: sokoban asString equals: '#####   
@@ -167,7 +167,7 @@ SokobanTest >> testLWithString [
 { #category : #tests }
 SokobanTest >> testManPositionNumber [
 
-self assert: ( sokoban  mapArray at:27 )  equals: $@.
+self assert: ( sokoban  level1 at:27 )  equals: $@.
 
 ]
 
@@ -192,7 +192,7 @@ SokobanTest >> testNewBoxPosition [
 
 	| soko  |
 	soko := Sokoban new.
-	self assert: (soko mapArray at:(soko newBoxPosition: 1))equals: Character space.
+	self assert: (soko level1 at:(soko newBoxPosition: 1))equals: Character space.
 ]
 
 { #category : #test }
@@ -211,9 +211,9 @@ SokobanTest >> testPushBoxOnEmptyCellAndUpdatePlayerPositionWith [
 	soko := Sokoban new.
 	self assert: soko playerPosition equals: 27.
 	soko pushBoxOnEmptyCellAndUpdatePlayerPosition: (soko playerPosition +2) with: 1.
-	self assert: (soko mapArray at:(soko playerPosition +2))equals: $B.
-	self assert: (soko mapArray at:(soko playerPosition + 1))equals: $@.
-	self assert: (soko mapArray at: soko playerPosition) equals: Character space.
+	self assert: (soko level1 at:(soko playerPosition +2))equals: $B.
+	self assert: (soko level1 at:(soko playerPosition + 1))equals: $@.
+	self assert: (soko level1 at: soko playerPosition) equals: Character space.
 ]
 
 { #category : #test }
@@ -224,7 +224,7 @@ SokobanTest >> testPushBoxOnTarget [
 	soko pushBoxOnTarget:28.
 
 	self
-		assert: (soko mapArray at:28)equals: $O
+		assert: (soko level1 at:28)equals: $O
 ]
 
 { #category : #test }
@@ -234,9 +234,9 @@ SokobanTest >> testPushBoxOnTargetAndUpdatePlayerPositionWith [
 	soko := Sokoban new.
 	self assert: soko playerPosition equals: 27.
 	soko pushBoxOnTargetAndUpdatePlayerPosition: (soko playerPosition +2) with: 1.
-	self assert: (soko mapArray at:(soko playerPosition +2))equals: $O.
-	self assert: (soko mapArray at:(soko playerPosition + 1))equals: $@.
-	self assert: (soko mapArray at: soko playerPosition) equals: Character space.
+	self assert: (soko level1 at:(soko playerPosition +2))equals: $O.
+	self assert: (soko level1 at:(soko playerPosition + 1))equals: $@.
+	self assert: (soko level1 at: soko playerPosition) equals: Character space.
 ]
 
 { #category : #test }
@@ -247,7 +247,7 @@ SokobanTest >> testPutBoxOnEmptyPosition [
 	soko putBoxOnEmptyPosition: 2.
 
 	self
-		assert: (soko mapArray at: 2)equals: $B
+		assert: (soko level1 at: 2)equals: $B
 ]
 
 { #category : #test }
@@ -257,8 +257,8 @@ SokobanTest >> testPutCurrentPlayerPositionAndResetPreviousPlayerPosition [
 	soko := Sokoban new.
 	self assert: soko updatePlayerPosition playerPosition equals: 27.
 	soko putCurrentPlayerPositionAndResetPreviousPlayerPosition: 1.
-	self assert: (soko mapArray at: soko playerPosition + 1) equals: $@.
-	self assert: (soko mapArray at: soko playerPosition) equals: Character space.
+	self assert: (soko level1 at: soko playerPosition + 1) equals: $@.
+	self assert: (soko level1 at: soko playerPosition) equals: Character space.
 	self assert: soko updatePlayerPosition playerPosition equals: 28
 ]
 
@@ -268,8 +268,8 @@ SokobanTest >> testPutPlayerInCurrentPosition [
 	| soko |
 	soko := Sokoban new.
 	soko putPlayerInCurrentPosition: 1.
-	self assert: (soko mapArray at: soko playerPosition) equals: $@.
-	self assert: (soko mapArray at: soko playerPosition + 1) equals: $@
+	self assert: (soko level1 at: soko playerPosition) equals: $@.
+	self assert: (soko level1 at: soko playerPosition + 1) equals: $@
 ]
 
 { #category : #test }
@@ -327,10 +327,10 @@ SokobanTest >> testResetAndUpdateThePlayerPostion [
 	self assert: soko updatePlayerPosition playerPosition equals: 27.
 	soko resetAndUpdateThePlayerPostion: 1.
    self
-		assert: (soko mapArray at: soko playerPosition)
+		assert: (soko level1 at: soko playerPosition)
 		equals: Character space.
 
-	self assert: (soko mapArray at: soko playerPosition + 1) equals: $@.
+	self assert: (soko level1 at: soko playerPosition + 1) equals: $@.
 	self assert: soko updatePlayerPosition playerPosition equals: 28
 ]
 
@@ -340,7 +340,7 @@ SokobanTest >> testResetPreviousPlayerPosition [
 	| soko |
 	soko := Sokoban new.
 	soko resetPreviousPlayerPosition.
-	self assert: (soko mapArray at: soko playerPosition) equals: Character space.
+	self assert: (soko level1 at: soko playerPosition) equals: Character space.
 
 ]
 
@@ -353,7 +353,7 @@ SokobanTest >> testResetXCells [
 	soko l.
 	soko r.
 	soko resetXCells. 
-   self assert: ( soko  mapArray at:26 )  equals: $x.
+   self assert: ( soko  level1 at:26 )  equals: $x.
 ]
 
 { #category : #test }

@@ -7,65 +7,47 @@ Class {
 	#instVars : [
 		'mapWidth',
 		'mapHeight',
-		'mapArray',
 		'desSquaresArray',
-		'playerPosition'
+		'playerPosition',
+		'level1'
 	],
 	#category : #MySokoban
 }
 
-{ #category : #'as yet unclassified' }
-Sokoban class >> emergencyStop [
-
- ^ true .
-	
-
-]
-
-{ #category : #'as yet unclassified' }
-Sokoban class >> playGame [
-
-	| soko |
-	soko := Sokoban new.
-
-	[self emergencyStop] whileFalse: [ 
-		| enteredText |
-		soko mapArray.
-		enteredText := UIManager default request: 'Please enter wsad'.
-		soko mainToCallFucntion: enteredText.
-		Transcript show: soko mapArray ; cr.]
-	
-
-]
-
 { #category : #mainMethods }
 Sokoban >> calculateDesSquares [
 
-	| cell |
+	" Collection of array to store cell indexes for 'x' and 'O' cells"
 
-	0 to: mapHeight-1 do: [ :row | 
-		0 to: mapWidth-1 do: [ :col | 
-			cell := row * mapWidth + col+ 1.
-			((mapArray at: cell) == $x or: (mapArray at: cell) == $O) ifTrue: [ 
-				desSquaresArray add: cell ] ] ].
-	
+	| cell |
+	0 to: mapHeight - 1 do: [ :row | 
+		0 to: mapWidth - 1 do: [ :col | 
+			cell := row * mapWidth + col + 1.
+			((level1 at: cell) == $x or: (level1 at: cell) == $O) ifTrue: [ 
+				desSquaresArray add: cell ] ] ]
 ]
 
 { #category : #directions }
 Sokoban >> d [
 
-self moveCharacterOffset: mapWidth .
-self resetXCells. 
+	"Move down actipn is performed and also after each move it checks for any X or O postions are crossed if yes reset them back to original positions"
+
+	self moveCharacterOffset: mapWidth.
+	self resetXCells
 ]
 
 { #category : #mainMethods }
 Sokoban >> desSquaresArray [
+
+	"return desSquaresArray "
 
 	^ desSquaresArray
 ]
 
 { #category : #mainMethods }
 Sokoban >> display [
+
+	"display the string on on Transcript with the help of traceCr."
 
 	Transcript clear.
 	self asString traceCr
@@ -74,128 +56,144 @@ Sokoban >> display [
 { #category : #initialization }
 Sokoban >> initialize [
 
+	"initialize  default values .similar like constructors in java. this method will invoke whenever there a new keyword found on time of object creation. also we are overriding the initialize method here. it calls the super classs initialize"
+
 	mapWidth := 8.
 	mapHeight := 10.
 	desSquaresArray := OrderedCollection new.
-	self mapInitialize.
+	self levelInitialize.
 	self calculateDesSquares.
-	self updatePlayerPosition.
-	
+	self updatePlayerPosition
 ]
 
 { #category : #'getteres and setters' }
 Sokoban >> isBox: offset [
 
-	^ (mapArray at: playerPosition + offset) = $B
+	"Check is there a box next to player "
+
+	^ (level1 at: playerPosition + offset) = $B
 ]
 
 { #category : #'getteres and setters' }
 Sokoban >> isBoxDoesNotHitAnotherBox: offset [
 
-	^ (mapArray at: playerPosition + (offset * 2)) ~= $B
+	"Check is there a box and another next to player so that he cannot make any movement of box"
+
+	^ (level1 at: playerPosition + (offset * 2)) ~= $B
 ]
 
 { #category : #'getteres and setters' }
 Sokoban >> isBoxDoesNotHitAnotherWall: offset [
 
-	^ (mapArray at: playerPosition + (offset * 2)) ~= $#
+	"Check is there a box and wall next to the box from player position so that he cannot make any movement of box"
+
+	^ (level1 at: playerPosition + (offset * 2)) ~= $#
 ]
 
 { #category : #'getteres and setters' }
 Sokoban >> isBoxDoesNotHitOnTarget: offset [
 
-	^ (mapArray at: playerPosition + (offset * 2)) ~= $O
+	"Check is there a box and next to the box any target is present. so that he cannot make any movement of box"
+
+	^ (level1 at: playerPosition + (offset * 2)) ~= $O
 ]
 
 { #category : #'getteres and setters' }
 Sokoban >> isBoxOnTarget: offset [
 
-	^ (mapArray at: playerPosition + offset) = $O.
-	
+	"Check is there a box on Target"
 
-
+	^ (level1 at: playerPosition + offset) = $O
 ]
 
 { #category : #'getteres and setters' }
 Sokoban >> isNewBoxPositionIsEmpty: newBoxPosition [
 
-	^ (mapArray at: newBoxPosition) = Character space
+	"Check if new box is empty"
+
+	^ (level1 at: newBoxPosition) = Character space
 ]
 
 { #category : #'getteres and setters' }
 Sokoban >> isNewBoxPositionIsTarget: newBoxPosition [
 
-	^ (mapArray at: newBoxPosition) = $x
+	"Check if new box is target "
+
+	^ (level1 at: newBoxPosition) = $x
 ]
 
 { #category : #'getteres and setters' }
 Sokoban >> isNoWall: offset [
 
-	^ (mapArray at: playerPosition + offset) ~= $#
-	
+	"Check is there a wall next to player "
+
+	^ (level1 at: playerPosition + offset) ~= $#
 ]
 
 { #category : #directions }
 Sokoban >> l [
 
+	"Move left actipn is performed and also after each move it checks for any X or O postions are crossed if yes reset them back to original positions"
+
 	self moveCharacterOffset: -1.
-	self resetXCells.
+	self resetXCells
 ]
 
 { #category : #'getteres and setters' }
-Sokoban >> mapArray [
+Sokoban >> level1 [
 
-^ mapArray.
+	"return my leave1 1D array"
 
+	^ level1
 ]
 
 { #category : #initialization }
-Sokoban >> mapInitialize [
+Sokoban >> levelInitialize [
 
-	mapArray  :=   '#####   ', 
-    '#xB ### ', 
-    '###   # ', 
-    '#x@B  # ', 
-    '### Bx# ', 
-    '#x##B # ', 
-    '# # x ##', 
-    '#B OBBx#', 
-    '#   x  #', 
-    '########'.
+	"Initialze my Array with byteString. 1Dimensional."
+
+	level1 := '#####   ' , '#xB ### ' , '###   # ' , '#x@B  # '
+	          , '### Bx# ' , '#x##B # ' , '# # x ##' , '#B OBBx#'
+	          , '#   x  #' , '########'
 ]
 
 { #category : #'getteres and setters' }
-Sokoban >> maxHeight [
-	^ mapHeight .
+Sokoban >> mapHeight [
+
+	" return height of the level1"
+
+	^ mapHeight
 ]
 
 { #category : #'getteres and setters' }
-Sokoban >> maxWidth [
-	^ mapWidth .
+Sokoban >> mapWidth [
+
+	" return width of the level1"
+
+	^ mapWidth
 ]
 
 { #category : #mainMethods }
 Sokoban >> moveCharacterOffset: offset [
 
+	"Logic of sokoban here: Offset is basically a number which tells about directions up/down/left/right"
+
 	| newBoxPosition |
 	self updatePlayerPosition.
 
 	(self isNoWall: offset) ifTrue: [ "if player doesn't hit the wall"
-		(((self isBox: offset) or: [ self isBoxOnTarget: offset ]) and: [
-			 "if player hits the box or the box on target cell and box doesn't hit a wall or another box or box on target cell"
+		(((self isBox: offset) or: [ self isBoxOnTarget: offset ]) and: [ "if player hits the box or the box on target cell and box doesn't hit a wall or another box or box on target cell"
 			 (self isBoxDoesNotHitAnotherWall: offset) or: [ 
 				 (self isBoxDoesNotHitAnotherBox: offset) or: [ 
 					 self isBoxDoesNotHitOnTarget: offset ] ] ])
 			ifTrue: [ 
 				newBoxPosition := self newBoxPosition: offset.
-				(self isNewBoxPositionIsEmpty: newBoxPosition) ifTrue: [ 
-					"if the square next to the Box is empty push the box and update player position"
+				(self isNewBoxPositionIsEmpty: newBoxPosition) ifTrue: [ "if the square next to the Box is empty push the box and update player position"
 					self
 						pushBoxOnEmptyCellAndUpdatePlayerPosition: newBoxPosition
-						with: offset ]. 
+						with: offset ].
 
-				(self isNewBoxPositionIsTarget: newBoxPosition) ifTrue: [ 
-					"if the square next to the Box is target push the box and update player position"
+				(self isNewBoxPositionIsTarget: newBoxPosition) ifTrue: [ "if the square next to the Box is target push the box and update player position"
 					self
 						pushBoxOnTargetAndUpdatePlayerPosition: newBoxPosition
 						with: offset ] ]
@@ -207,23 +205,27 @@ Sokoban >> moveCharacterOffset: offset [
 { #category : #'getteres and setters' }
 Sokoban >> newBoxPosition: offset [
 
-	^ playerPosition + (offset * 2).
+	"returns an newposition calculated by current positions adding with number of offset positions inoder to move. used in main logic of the sokobon"
+
+	^ playerPosition + (offset * 2)
 ]
 
 { #category : #'getteres and setters' }
 Sokoban >> playerPosition [
 
-^ playerPosition.
+	"return the player position"
 
-
+	^ playerPosition
 ]
 
 { #category : #'getteres and setters' }
 Sokoban >> printOn: stream [
 
+	"astream to print out the array string from level1"
+
 	1 to: mapHeight do: [ :x | 
 		1 to: mapWidth do: [ :y | 
-		stream nextPut: (mapArray at: (((x - 1) * mapWidth) + y)) ].
+		stream nextPut: (level1 at: x - 1 * mapWidth + y) ].
 		stream cr ]
 ]
 
@@ -239,7 +241,9 @@ Sokoban >> pushBoxOnEmptyCellAndUpdatePlayerPosition: newBoxPosition with: offse
 { #category : #'getteres and setters' }
 Sokoban >> pushBoxOnTarget: newBoxPosition [
 
-	^ mapArray at: newBoxPosition put: $O.
+	"push box on target"
+
+	^ level1 at: newBoxPosition put: $O
 ]
 
 { #category : #'getteres and setters' }
@@ -254,24 +258,32 @@ Sokoban >> pushBoxOnTargetAndUpdatePlayerPosition: newBoxPosition with: offset [
 { #category : #'getteres and setters' }
 Sokoban >> putBoxOnEmptyPosition: newBoxPosition [
 
-	 ^ mapArray at: newBoxPosition put: $B.
+	"push the box on empty position"
+
+	^ level1 at: newBoxPosition put: $B
 ]
 
 { #category : #'getteres and setters' }
 Sokoban >> putCurrentPlayerPositionAndResetPreviousPlayerPosition: offset [
 
+	"put the player in current position and also reset,update the player previous positions"
+
 	self putPlayerInCurrentPosition: offset.
-   self resetPreviousPlayerPosition. 
+	self resetPreviousPlayerPosition
 ]
 
 { #category : #'getteres and setters' }
 Sokoban >> putPlayerInCurrentPosition: offset [
 
-	^ mapArray at: playerPosition + offset put: $@
+	"put player in current position"
+
+	^ level1 at: playerPosition + offset put: $@
 ]
 
 { #category : #directions }
 Sokoban >> r [
+
+	"Move right actipn is performed and also after each move it checks for any X or O postions are crossed if yes reset them back to original positions"
 
 	self moveCharacterOffset: 1.
 	self resetXCells
@@ -289,33 +301,39 @@ Sokoban >> resetAndUpdateThePlayerPostion: offset [
 { #category : #'getteres and setters' }
 Sokoban >> resetPreviousPlayerPosition [
 
-	^ mapArray at: playerPosition put: Character space
+	"reset the player to empty"
+
+	^ level1 at: playerPosition put: Character space
 ]
 
 { #category : #mainMethods }
 Sokoban >> resetXCells [
-|desCount size|
 
-desCount  := 0.
-size := desSquaresArray size.
-1 to: size do: [:i | 
-  (mapArray  at: (desSquaresArray at: i)) = $O
-    ifTrue: [desCount := desCount + 1].
-  ( mapArray  at: (desSquaresArray at: i)) = (Character space)
-    ifTrue: [mapArray  at: (desSquaresArray at: i) put: $x
-	]
-].
+	"checks for any X or O postions are crossed if yes reset them back to original positions"
+
+	| desCount size |
+	desCount := 0.
+	size := desSquaresArray size.
+	1 to: size do: [ :i | 
+		(level1 at: (desSquaresArray at: i)) = $O ifTrue: [ 
+			desCount := desCount + 1 ].
+		(level1 at: (desSquaresArray at: i)) = Character space ifTrue: [ 
+			level1 at: (desSquaresArray at: i) put: $x ] ]
 ]
 
 { #category : #directions }
 Sokoban >> u [
 
-self moveCharacterOffset: ((0-1)* mapWidth) .
-self resetXCells. 
+	"Move up actipn is performed and also after each move it checks for any X or O postions are crossed if yes reset them back to original positions"
+
+	self moveCharacterOffset: 0 - 1 * mapWidth.
+	self resetXCells
 ]
 
 { #category : #mainMethods }
 Sokoban >> updatePlayerPosition [
 
-	playerPosition := mapArray indexOf: $@
+	"get the position of where player is located"
+
+	playerPosition := level1 indexOf: $@
 ]
