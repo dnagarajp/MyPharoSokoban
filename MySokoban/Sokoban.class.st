@@ -79,13 +79,12 @@ Sokoban >> initialize [
 	desSquaresArray := OrderedCollection new.
 	self mapInitialize.
 	self calculateDesSquares.
-	self updatePlayerPosition
+	self updatePlayerPosition.
+	
 ]
 
 { #category : #'getteres and setters' }
 Sokoban >> isBox: offset [
-
-
 
 	^ (mapArray at: playerPosition + offset) = $B
 ]
@@ -181,24 +180,27 @@ Sokoban >> moveCharacterOffset: offset [
 	| newBoxPosition |
 	self updatePlayerPosition.
 
-	(self isNoWall: offset) ifTrue: [ 
-		(((self isBox: offset) or: [ self isBoxOnTarget: offset ]) and: [ 
+	(self isNoWall: offset) ifTrue: [ "if player doesn't hit the wall"
+		(((self isBox: offset) or: [ self isBoxOnTarget: offset ]) and: [
+			 "if player hits the box or the box on target cell and box doesn't hit a wall or another box or box on target cell"
 			 (self isBoxDoesNotHitAnotherWall: offset) or: [ 
 				 (self isBoxDoesNotHitAnotherBox: offset) or: [ 
 					 self isBoxDoesNotHitOnTarget: offset ] ] ])
 			ifTrue: [ 
 				newBoxPosition := self newBoxPosition: offset.
 				(self isNewBoxPositionIsEmpty: newBoxPosition) ifTrue: [ 
+					"if the square next to the Box is empty push the box and update player position"
 					self
 						pushBoxOnEmptyCellAndUpdatePlayerPosition: newBoxPosition
-						with: offset ].
+						with: offset ]. 
 
 				(self isNewBoxPositionIsTarget: newBoxPosition) ifTrue: [ 
+					"if the square next to the Box is target push the box and update player position"
 					self
 						pushBoxOnTargetAndUpdatePlayerPosition: newBoxPosition
 						with: offset ] ]
-			ifFalse: [ self resetAndUpdateThePlayerPostion: offset ] ].
-
+			ifFalse: [ "if the square next to the player is a wall reset and update the player position" 
+				self resetAndUpdateThePlayerPostion: offset ] ].
 	self updatePlayerPosition
 ]
 
@@ -228,8 +230,10 @@ Sokoban >> printOn: stream [
 { #category : #'getteres and setters' }
 Sokoban >> pushBoxOnEmptyCellAndUpdatePlayerPosition: newBoxPosition with: offset [
 
+	"push the Box is empty cell and update player position"
+
 	self putBoxOnEmptyPosition: newBoxPosition.
-	self putCurrentPlayerPositionAndResetPreviousPlayerPosition: offset.
+	self putCurrentPlayerPositionAndResetPreviousPlayerPosition: offset
 ]
 
 { #category : #'getteres and setters' }
@@ -241,6 +245,8 @@ Sokoban >> pushBoxOnTarget: newBoxPosition [
 { #category : #'getteres and setters' }
 Sokoban >> pushBoxOnTargetAndUpdatePlayerPosition: newBoxPosition with: offset [
 
+	"push the box on target update player position"
+
 	self pushBoxOnTarget: newBoxPosition.
 	self putCurrentPlayerPositionAndResetPreviousPlayerPosition: offset
 ]
@@ -248,7 +254,7 @@ Sokoban >> pushBoxOnTargetAndUpdatePlayerPosition: newBoxPosition with: offset [
 { #category : #'getteres and setters' }
 Sokoban >> putBoxOnEmptyPosition: newBoxPosition [
 
-	^ (mapArray at: newBoxPosition put: $B)
+	 ^ mapArray at: newBoxPosition put: $B.
 ]
 
 { #category : #'getteres and setters' }
@@ -274,8 +280,10 @@ Sokoban >> r [
 { #category : #'getteres and setters' }
 Sokoban >> resetAndUpdateThePlayerPostion: offset [
 
+	"reset and update the player position"
+
 	self resetPreviousPlayerPosition.
-	self putPlayerInCurrentPosition: offset.
+	self putPlayerInCurrentPosition: offset
 ]
 
 { #category : #'getteres and setters' }
